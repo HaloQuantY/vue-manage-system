@@ -5,4 +5,11 @@ const http = axios.create({
   timeout: 1000
 })
 
+http.interceptors.request.use(
+  config => {
+    config.headers.Authorization = window.sessionStorage.getItem('token')
+    return config
+  }
+)
+
 export default http

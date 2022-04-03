@@ -1,19 +1,12 @@
 <template>
   <div class="home">
-    HomePage
-    <el-button @click="logout">logout</el-button>
+    homePage
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HomePage',
-  methods: {
-    logout () {
-      window.sessionStorage.clear()
-      this.$router.push('/login')
-    }
-  }
+  name: 'HomePage'
 }
 </script>
 
