@@ -15,7 +15,7 @@
         </el-aside>
 
         <el-main>
-          <router-view></router-view>
+          <MainContent />
         </el-main>
       </el-container>
     </el-container>
@@ -24,11 +24,13 @@
 
 <script>
 import MenuComponent from './menu'
+import MainContent from './main'
 
 export default {
   name: 'LayoutComponent',
   components: {
-    MenuComponent
+    MenuComponent,
+    MainContent
   },
   methods: {
     logout () {
