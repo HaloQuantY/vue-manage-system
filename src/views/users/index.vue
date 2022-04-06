@@ -29,7 +29,7 @@
             <!-- 删除用户 -->
             <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteUserHandler(scope.row)"></el-button>
             <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
-              <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+              <el-button type="warning" icon="el-icon-setting" size="mini" @click="dispatchUserRoleHandler(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -98,11 +98,41 @@
         <el-button type="primary" @click="submitEditFormHandler('editForm')">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 分配角色对话框 -->
+    <el-dialog
+    title="分配角色"
+    :visible.sync="dispatchUserRoleDialogVisible"
+    width="50%"
+    @close="dispatchUserRoleDialogCloseHandler"
+    >
+      <div>
+        <p>当前用户：{{ userInfo.username }}</p>
+        <p>当前角色：{{ userInfo.role_name }}</p>
+        <p>
+          <span>分配新角色：</span>
+          <el-select v-model="selectedRoleId" placeholder="请选择新角色">
+            <el-option
+              v-for="item in roleList"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </p>
+      </div>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dispatchUserRoleDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dispatchUserRoleSubmitHandler">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getUserList, changeUserStatus, addNewUser, getUserInfo, editUser, deleteUser } from '@/api/users'
+import { getUserList, changeUserStatus, addNewUser, getUserInfo, editUser, deleteUser, dispatchUserRole } from '@/api/users'
+import { getRolesList } from '@/api/roles.js'
 
 export default {
   name: 'UsersPage',
@@ -172,7 +202,11 @@ export default {
           { required: true, message: '请输入手机', trigger: 'blur' },
           { validator: checkMobile, trigger: 'blur' }
         ]
-      }
+      },
+      dispatchUserRoleDialogVisible: false,
+      userInfo: {},
+      roleList: [],
+      selectedRoleId: ''
     }
   },
   methods: {
@@ -286,6 +320,36 @@ export default {
       }).catch(() => {
         this.$message.info('已取消删除')
       })
+    },
+    dispatchUserRoleHandler (userInfo) {
+      this.userInfo = userInfo
+      this.selfGetRoleList()
+      this.dispatchUserRoleDialogVisible = true
+    },
+    selfGetRoleList () {
+      getRolesList()
+        .then(({ data: res }) => {
+          console.log(res)
+          if (res.meta.status !== 200) {
+            return this.$message.error(res.meta.msg)
+          }
+          this.roleList = res.data
+          console.log(this.roleList)
+        })
+    },
+    dispatchUserRoleDialogCloseHandler () {
+      this.selectedRoleId = ''
+    },
+    dispatchUserRoleSubmitHandler () {
+      dispatchUserRole(this.userInfo.id, this.selectedRoleId)
+        .then(({ data: res }) => {
+          if (res.meta.status !== 200) {
+            return this.$message.error(res.meta.msg)
+          }
+          this.selfGetUserList(this.userListParams)
+          this.$message.success(res.meta.msg)
+          this.dispatchUserRoleDialogVisible = false
+        })
     }
   },
   computed: {

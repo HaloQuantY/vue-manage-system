@@ -3,7 +3,7 @@
   class="el-menu-vertical-demo"
   background-color="#333744"
   text-color="#fff"
-  active-text-color="#ffd04b"
+  active-text-color="#409efe"
   unique-opened
   router
   :default-active="activeIndex"

@@ -24,3 +24,7 @@ export const editUser = (userInfo) => {
 export const deleteUser = (id) => {
   return http.delete(`users/${id}`, { id })
 }
+
+export const dispatchUserRole = (userId, roleId) => {
+  return http.put(`users/${userId}/role`, { rid: roleId })
+}
