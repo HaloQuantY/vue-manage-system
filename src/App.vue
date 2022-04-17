@@ -14,4 +14,7 @@ export default {
 #app {
   min-width: 1366px;
 }
+.el-cascader-panel {
+  height: 380px;
+}
 </style>

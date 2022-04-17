@@ -25,6 +25,10 @@ const routes = [
       {
         path: 'roles',
         component: () => import('@/views/roles')
+      },
+      {
+        path: 'categories',
+        component: () => import('@/views/goods_category')
       }
     ]
   },
